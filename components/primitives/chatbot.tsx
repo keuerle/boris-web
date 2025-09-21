@@ -435,7 +435,7 @@ function ConversationPromptInput() {
                                 {capabilities.parameters}
                               </Badge>
                               {capabilities.canThink && (
-                                <Brain className="size-3 text-purple-600" />
+                                <Brain className="size-3" />
                               )}
                             </div>
                           </PromptInputModelSelectItem>
