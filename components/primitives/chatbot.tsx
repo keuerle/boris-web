@@ -105,8 +105,9 @@ ErrorMessage.displayName = "ErrorMessage"
 
 function ConversationPromptInput() {
   const [model, setModel] = useState("llama3:latest")
+  const [input, setInput] = useState('')
   
-  const { messages, sendMessage, status, error, input, setInput, handleInputChange } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/primitives/chatbot",
     }),
@@ -116,6 +117,7 @@ function ConversationPromptInput() {
     if (!message.text?.trim()) return
 
     sendMessage({ text: message.text })
+    setInput('') // Clear the input after sending
   }
 
   const models = [
@@ -158,7 +160,7 @@ function ConversationPromptInput() {
             <PromptInputTextarea
               placeholder="Ask anything"
               value={input}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
             />
           </PromptInputBody>
           <PromptInputToolbar>
