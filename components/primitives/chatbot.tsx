@@ -4,6 +4,7 @@ import {
   Conversation,
   ConversationContent,
   ConversationEmptyState,
+  ConversationScrollButton,
 } from "@/components/ai-elements/conversation"
 import {
   Message,
@@ -153,6 +154,7 @@ function ConversationPromptInput() {
             {status === "submitted" && <LoadingMessage />}
             {status === "error" && error && <ErrorMessage error={error} />}
           </ConversationContent>
+          <ConversationScrollButton />
         </Conversation>
 
         <PromptInput onSubmit={handleSubmit} className="mt-4">
