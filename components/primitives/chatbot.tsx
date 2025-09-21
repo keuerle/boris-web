@@ -14,6 +14,13 @@ import {
   PromptInputBody,
   PromptInputSubmit,
   PromptInputTextarea,
+  PromptInputToolbar,
+  PromptInputTools,
+  PromptInputModelSelect,
+  PromptInputModelSelectContent,
+  PromptInputModelSelectItem,
+  PromptInputModelSelectTrigger,
+  PromptInputModelSelectValue,
 } from "@/components/ai-elements/prompt-input"
 import { Response } from "@/components/ai-elements/response"
 import { Loader } from "@/components/ai-elements/loader"
@@ -97,7 +104,9 @@ const ErrorMessage = memo(({ error }: { error: Error }) => (
 ErrorMessage.displayName = "ErrorMessage"
 
 function ConversationPromptInput() {
-  const { messages, sendMessage, status, error } = useChat({
+  const [model, setModel] = useState("llama3:latest")
+  
+  const { messages, sendMessage, status, error, input, setInput } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/primitives/chatbot",
     }),
@@ -108,6 +117,13 @@ function ConversationPromptInput() {
 
     sendMessage({ text: message.text })
   }
+
+  const models = [
+    {
+      name: 'Llama 3 (Local)',
+      value: 'llama3:latest',
+    },
+  ]
 
   return (
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
@@ -141,14 +157,33 @@ function ConversationPromptInput() {
           <PromptInputBody>
             <PromptInputTextarea
               placeholder="Ask anything"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
             />
           </PromptInputBody>
-          <div className="flex items-center justify-end p-2">
+          <PromptInputToolbar>
+            <PromptInputTools>
+              <PromptInputModelSelect
+                onValueChange={(value) => setModel(value)}
+                value={model}
+              >
+                <PromptInputModelSelectTrigger>
+                  <PromptInputModelSelectValue />
+                </PromptInputModelSelectTrigger>
+                <PromptInputModelSelectContent>
+                  {models.map((modelOption) => (
+                    <PromptInputModelSelectItem key={modelOption.value} value={modelOption.value}>
+                      {modelOption.name}
+                    </PromptInputModelSelectItem>
+                  ))}
+                </PromptInputModelSelectContent>
+              </PromptInputModelSelect>
+            </PromptInputTools>
             <PromptInputSubmit 
               status={error ? "error" : status}
               disabled={status === "submitted" || status === "streaming"}
             />
-          </div>
+          </PromptInputToolbar>
         </PromptInput>
       </div>
     </div>
