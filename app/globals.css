@@ -130,3 +130,33 @@
 .conversation-scroll::-webkit-scrollbar {
   display: none; /* WebKit */
 }
+
+/* Hide scrollbar for all conversation elements */
+[data-radix-scroll-area-viewport] {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* Internet Explorer 10+ */
+}
+
+[data-radix-scroll-area-viewport]::-webkit-scrollbar {
+  display: none !important; /* WebKit */
+}
+
+/* Additional scrollbar hiding for AI SDK components */
+[data-conversation] {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+[data-conversation]::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Global scrollbar hiding for all elements in conversation */
+.max-w-4xl * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.max-w-4xl *::-webkit-scrollbar {
+  display: none !important;
+}
