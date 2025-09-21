@@ -36,7 +36,7 @@ import {
   ThumbsDown,
   ThumbsUp,
 } from "lucide-react"
-import { memo, useState, Fragment } from "react"
+import { memo, useState, Fragment, useEffect } from "react"
 
 type MessageComponentProps = {
   message: UIMessage
@@ -104,9 +104,23 @@ const ErrorMessage = memo(({ error }: { error: Error }) => (
 
 ErrorMessage.displayName = "ErrorMessage"
 
+type Model = {
+  name: string
+  value: string
+  size?: number
+  modified?: string
+}
+
 function ConversationPromptInput() {
   const [model, setModel] = useState("llama3:latest")
   const [input, setInput] = useState('')
+  const [models, setModels] = useState<Model[]>([
+    {
+      name: 'Llama 3 (Local)',
+      value: 'llama3:latest',
+    },
+  ])
+  const [modelsLoading, setModelsLoading] = useState(true)
   
   const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
@@ -114,19 +128,41 @@ function ConversationPromptInput() {
     }),
   })
 
+  // Fetch available models from Ollama
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await fetch('/api/models')
+        if (response.ok) {
+          const data = await response.json()
+          const formattedModels = data.models.map((m: any) => ({
+            name: m.name.charAt(0).toUpperCase() + m.name.slice(1).replace(/[-_]/g, ' '),
+            value: m.value,
+            size: m.size,
+            modified: m.modified
+          }))
+          setModels(formattedModels)
+          // Set the first model as default if current model isn't available
+          if (formattedModels.length > 0 && !formattedModels.find(m => m.value === model)) {
+            setModel(formattedModels[0].value)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch models:', error)
+      } finally {
+        setModelsLoading(false)
+      }
+    }
+
+    fetchModels()
+  }, [model])
+
   const handleSubmit = (message: { text?: string; files?: any[] }, event: React.FormEvent<HTMLFormElement>) => {
     if (!message.text?.trim()) return
 
     sendMessage({ text: message.text })
     setInput('') // Clear the input after sending
   }
-
-  const models = [
-    {
-      name: 'Llama 3 (Local)',
-      value: 'llama3:latest',
-    },
-  ]
 
   return (
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
@@ -170,9 +206,12 @@ function ConversationPromptInput() {
               <PromptInputModelSelect
                 onValueChange={(value) => setModel(value)}
                 value={model}
+                disabled={modelsLoading}
               >
                 <PromptInputModelSelectTrigger>
-                  <PromptInputModelSelectValue />
+                  <PromptInputModelSelectValue>
+                    {modelsLoading ? "Loading models..." : models.find(m => m.value === model)?.name || "Select model"}
+                  </PromptInputModelSelectValue>
                 </PromptInputModelSelectTrigger>
                 <PromptInputModelSelectContent>
                   {models.map((modelOption) => (
