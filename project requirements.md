@@ -27,18 +27,65 @@ When working with ai-sdk components, always reference these strong examples:
 - Complete chat interface UI with message handling, loading states, and responsive design
 - API route for chat functionality with local Ollama integration (http://192.168.1.246:11434)
 - Updated chatbot component to use ai-sdk components instead of prompt-kit
+- Model hot-swapping functionality - users can switch between any available Ollama models in real-time
+- Model capability tooltips with parameter counts and thinking indicators - each model shows parameter size and brain icon in dropdown, with capability badges revealed on hover
 
 **Next Priority**
+- Examine AI-SDK for ways to make our chat more advanced (what UI sees vs what system sees, etc. ).
 
 **Future Goals**
-- Examine AI-SDK for ways to make our chat more advanced (what UI sees vs what system sees, etc. ).
 - Walk through AI-SDK ideas together.
 
 **In Progress:**
 
 **Known Issues:**
+- None currently
 
 **Recent Changes:**
+- **COMPLETED: Capability Badges Moved to Tooltips (September 21, 2025)**
+  - Moved colorful capability badges to hover tooltips for cleaner dropdown UI
+  - Parameter count and brain icon remain visible in dropdown for quick reference
+  - Tooltips appear on the right side when hovering over model items
+  - Used shadcn/ui Tooltip component with proper accessibility
+  - Maintains all existing functionality while reducing visual clutter
+- **COMPLETED: Brain Icon for Thinking Models (September 21, 2025)**
+  - Added purple brain icon next to models that can show their thinking process
+  - Currently only Qwen3 displays the brain icon as it supports `<think>` tags
+  - Brain icon appears between parameter count and capability badges
+  - Easy visual indicator to identify which models offer reasoning transparency
+  - Future models with thinking capabilities will automatically get the brain icon
+- **COMPLETED: Model Parameter Count Tags (September 21, 2025)**
+  - Added parameter count tags next to each model name in dropdown
+  - Llama3: 8B parameters - "Conversation" (blue)
+  - Gemma3: 9B parameters - "Fast" (green) 
+  - Qwen3: 32B parameters - "Reasoning" (purple) + "Multilingual" (orange)
+  - GPT-OSS: 20B parameters - "Conversation" (blue)
+  - Parameter tags styled with monospace font and subtle gray background for easy identification
+  - Layout: Model Name + Parameter Count (left) | Capability Badges (right)
+- **COMPLETED: Colored Model Capability Badges (September 21, 2025)**
+  - Updated model badges with colors and optimized to 1-2 badges per model
+  - Color scheme: Blue=Conversation, Green=Speed, Purple=Reasoning, Orange=Multilingual, Gray=General
+  - Used Tailwind color classes with outline badge variant for better visibility
+- **COMPLETED: Advanced Think Tag Handling & Reasoning (September 21, 2025)**
+  - Fixed React component error when Qwen model outputs `<think>` tags during streaming
+  - Updated implementation to follow official AI SDK Reasoning component patterns
+  - Added support for both manual think tag parsing (Qwen) and native reasoning parts (future models)
+  - Implemented robust parsing with comprehensive edge case handling for malformed/incomplete tags
+  - Added aggressive tag cleanup to prevent any think tag fragments from reaching React components
+  - Enhanced with thinking duration tracking - shows "Thinking..." during streaming, "Thought for X seconds" when complete
+  - Compared and aligned with Vercel Labs reasoning starter template for best practices
+  - Added automatic timing calculation for thinking duration display
+  - Configured proper auto-open/close behavior matching AI SDK standards
+  - Added `sendReasoning: true` to API response for better AI SDK integration
+  - Think content displays in collapsible "Thinking" section with proper animations and timing
+  - Tested with all edge cases - confirmed working without any React errors
+- **COMPLETED: Model Hot-Swapping (September 21, 2025)**
+  - Fixed model selection to work dynamically in real-time
+  - Frontend now sends selected model parameter with each chat request
+  - API route accepts and uses the model parameter instead of hardcoded value
+  - Users can switch between any available Ollama models (llama3, gemma3, qwen3, gpt-oss) at any time
+  - Model dropdown populated from live Ollama server via /api/models endpoint
+  - Tested with multiple models - confirmed working correctly
 - **COMPLETED: Ollama Integration**
   - Successfully connected chat interface to local Ollama server (http://192.168.1.246:11434)
   - Fixed AI SDK endpoint issue by using openai.chat() method for chat completions

@@ -19,9 +19,11 @@ const openai = createOpenAI({
 
 export async function POST(req: Request) {
   try {
-    const { messages }: { messages: UIMessage[] } = await req.json()
+    const { messages, model }: { messages: UIMessage[]; model?: string } = await req.json()
 
+    const selectedModel = model || "llama3:latest"
     console.log('Processing chat request with messages:', messages)
+    console.log('Using model:', selectedModel)
     
     // Convert messages to the format expected by the AI SDK
     const modelMessages = messages.map(msg => ({
@@ -32,12 +34,14 @@ export async function POST(req: Request) {
     console.log('Converted messages:', modelMessages)
     
     const result = streamText({
-      model: openai.chat("llama3:latest"), // Using chat completions endpoint explicitly
+      model: openai.chat(selectedModel), // Use the selected model dynamically
       system: "You are a helpful assistant.",
       messages: modelMessages,
     })
 
-    return result.toUIMessageStreamResponse()
+    return result.toUIMessageStreamResponse({
+      sendReasoning: true,
+    })
   } catch (error) {
     console.error('Chat API Error:', error)
     console.error('Error details:', {
