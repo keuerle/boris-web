@@ -1,0 +1,42 @@
+# Boris Web Project Rules
+
+## Project Requirements Reference
+Always reference `project requirements.md` when working on this project. The file contains critical information about the tech stack, current status, and project goals.
+
+## Current Status Updates
+**IMPORTANT**: After completing any task or making changes to the codebase, you MUST update the "current status" section in `project requirements.md` to reflect:
+
+- What was just completed (move items from "In Progress" or "Next Priority" to "Working")
+- Any new issues discovered (add to "Known Issues")
+- What the user should work on next (update "Next Priority")
+- Recent changes made (update "Recent Changes" section)
+
+## Scope Management
+Always reference the "Future Goals" section when making architectural decisions or suggesting new features. Ensure current implementations align with long-term vision and don't create technical debt that conflicts with future goals.
+
+## Tech Stack Preferences
+- Use Lucide React for icons (already installed)
+- Use react-spring for animations (preferred over Framer Motion)
+- Use react-icons library for additional icons if needed
+- Use Medium weight Cascadia font as default
+- Use console-style ASCII art for streaming platform links
+
+## Development Guidelines
+- Always maintain TypeScript type safety
+- Follow the existing component patterns (compound components)
+- Use Tailwind CSS for styling
+- Ensure accessibility compliance
+- Test responsive design on mobile and desktop
+
+## Communication
+When discussing the project, always consider the current status and priorities listed in the requirements file to provide relevant, actionable assistance.
+
+## Problem-Solving Protocol
+When encountering technical issues, installation problems, or architectural decisions that could significantly impact the project:
+
+1. **STOP** and explain the problem clearly to the user
+2. **ASK** for guidance on which direction to take
+3. **WAIT** for user input before proceeding with a solution
+4. **DOCUMENT** the decision in the requirements file if it affects the tech stack or architecture
+
+This ensures we don't waste time on solutions that don't align with your preferences or project goals.
